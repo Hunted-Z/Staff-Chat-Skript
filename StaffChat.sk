@@ -1,0 +1,37 @@
+# Luck perms permissions
+# staffchat.join | Allow group / user to type in staff chat
+# staffchat.view | Allow group / user to view staff chat messages
+# staffchat.force | Allow group / user to for people to join / leave staff chat
+
+# Code made by hunted_. (EnvixityXD)
+
+on join:
+	set {staffchat.%player%} to false
+
+command /staffchat:
+	aliases: /sc
+	permission: staffchat.join
+	trigger:
+		if {staffchat.%player%} is false:
+			set {staffchat.%player%} to true
+			send "&aJoined Staff Chat" to player
+		else:
+			set {staffchat.%player%} to false
+			send "&cLeft Staff Chat" to player
+
+command /forcestaffchat <player>:
+	permission: staffchat.force
+	trigger:
+		if {staffchat.%arg 1%} is false:
+			set {staffchat.%arg 1%} to true
+			send "&aForced %arg 1% to join the staff chat" to player
+		else:
+			set {staffchat.%arg 1%} to false
+			send "&cForced %arg 1% to leave the staff chat" to player
+
+on chat:
+	if {staffchat.%player%} is true:
+		cancel event
+		loop all players:
+			if loop-player has permission "staffchat.view":
+				send "&b&lStaff Chat &e| &f%player% &e| &7%message%" to loop-player
